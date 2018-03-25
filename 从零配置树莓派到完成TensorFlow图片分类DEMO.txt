@@ -1,0 +1,37 @@
+从零配置树莓派
+
+0. 安装官方操作系统Raspbian 
+	下载官方操作系统
+	http://director.downloads.raspberrypi.org/raspbian/images/raspbian-2018-03-14/2018-03-13-raspbian-stretch.zip
+	下载tf卡烧录软件
+	http://huajun1.onlinedown.net/down/Win32DiskImager-0.9.5-binary.zip
+	通过Win32DiskImager将官方镜像写入卡中，并将tf卡插入树莓派背面卡槽
+	连接显示器、USB鼠标、USB键盘，开机
+
+1. 设置root账户及SSH远程登录
+	初次使用树莓派系统时，默认用户是pi ，密码为raspberry。
+	sudo passwd --unlock root 
+	su root
+	raspi-config
+	设置SSH为打开，设置无线网络
+	sudo nano /etc/ssh/sshd_config
+	取消PermitRootLogin without-password的注释
+	并将该行修改为 PermitRootLogin yes
+	reboot
+
+2. 安装pip、python-dev
+	sudo apt-get install python-pip
+	sudo apt-get install python-dev
+
+3. 下载、安装、配置TensorFlow
+	wget https://github.com/samjabrahams/tensorflow-on-raspberry-pi/releases/download/v0.11.0/tensorflow-0.11.0-py3-none-any.whl
+	sudo pip3 install tensorflow-0.11.0-py3-none-any.whl
+	sudo pip3 install pbr
+	sudo pip3 install mock
+	
+4. 下载Google Inception-V3模型测试图像识别
+	mkdir ~/tensorflow-related/model
+	cd ~/tensorflow-related/model
+	cd /usr/local/lib/python3.5/dist-packages/tensorflow/models/image/imagenet
+	echo 自动下载Inception-V3模型，并用自带测试图片（熊猫进行分类测试）
+	python3.5 classify_image.py --model_dir /root/tensorflow-related/model --image_file /root/tensorflow-related/model/cropped_panda.jpg
